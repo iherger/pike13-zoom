@@ -1,0 +1,32 @@
+{
+  "name": "pike13-zoom",
+  "version": "0.0.1",
+  "description": "Automatically schedule zoom.us meetings for Pike13 events",
+  "main": "index.ts",
+  "author": "Ivan Herger <ivan.herger@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dev": "ts-node-dev -r dotenv/config --no-notify --respawn --transpileOnly ./src",
+    "start": "node ./dist/index.js",
+    "start:local": "node -r dotenv/config ./dist/index.js",
+    "clean": "rm -rf dist",
+    "build": "yarn clean && tsc",
+    "tsc": " tsc",
+    "format": "prettier --write \"**/*.ts\"",
+    "lint": "eslint \"**/*.ts\" && prettier --check \"**/*.ts\"",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "moment": "^2.24.0",
+    "node-cron": "^2.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^13.9.1",
+    "@types/node-cron": "^2.0.3",
+    "dotenv": "^8.2.0",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "typescript": "^3.8.3"
+  }
+}

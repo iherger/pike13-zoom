@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "target": "ES2018",
+    "lib": ["ES2018", "dom"],
+    "module": "CommonJS",
+    "strict": true,
+    "skipLibCheck": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "alwaysStrict": true,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true
+  }
+}
