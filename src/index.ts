@@ -1,6 +1,6 @@
 import * as cron from "node-cron";
 import axios from "axios";
-import moment from "moment";
+import moment from "moment-timezone";
 
 interface ZoomMeeting {
   uuid: string;
@@ -116,15 +116,15 @@ cron.schedule("* * * * *", async () => {
       url = createMeeting.data.join_url;
 
       console.log(
-        `----Created meeting at ${moment(event.start_at).format(
-          "YYYY-MM-DD HH:mm"
-        )}`
+        `----Created meeting at ${moment(event.start_at)
+          .tz(event.timezone)
+          .format("YYYY-MM-DD HH:mm")}`
       );
     } else {
       console.log(
-        `----Meeting at ${moment(event.start_at).format(
-          "YYYY-MM-DD HH:mm"
-        )} already exists`
+        `----Meeting at ${moment(event.start_at)
+          .tz(event.timezone)
+          .format("YYYY-MM-DD HH:mm")} already exists`
       );
     }
 
@@ -142,9 +142,11 @@ cron.schedule("* * * * *", async () => {
       if (!existingNotes.length) {
         const note = `Der Link für die Online Yoga Lektion von heute ${moment(
           event.start_at
-        ).format(
-          "HH:mm"
-        )} Uhr lautet:<br /><a href="${url}" target="_blank">${url}</a>`;
+        )
+          .tz(event.timezone)
+          .format(
+            "HH:mm"
+          )} Uhr lautet:<br /><a href="${url}" target="_blank">${url}</a>`;
 
         await pike.post(`/event_occurrences/${event.id}/notes`, {
           note: {
