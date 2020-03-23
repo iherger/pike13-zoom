@@ -88,7 +88,8 @@ cron.schedule("* * * * *", async () => {
 
     // check if zoom meeting already exists
     const singleZoomMeeting = meetings.find(
-      meeting => meeting.start_time === event.start_at
+      meeting =>
+        meeting.start_time === event.start_at && meeting.topic === event.name
     );
 
     let url = singleZoomMeeting?.join_url;
@@ -140,7 +141,7 @@ cron.schedule("* * * * *", async () => {
       const existingNotes = existingNotesResult.data.notes;
 
       if (!existingNotes.length) {
-        const note = `Der Link für die Online Yoga Lektion von heute ${moment(
+        const note = `Der Link für ${event.name} heute um ${moment(
           event.start_at
         )
           .tz(event.timezone)
