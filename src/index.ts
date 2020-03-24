@@ -54,7 +54,7 @@ const zoom = axios.create({
 });
 
 // main
-cron.schedule("*/5 * * * *", async () => {
+cron.schedule("* * * * *", async () => {
   // (async () => {
   console.log("\nStarting cron job...");
 
@@ -133,7 +133,7 @@ cron.schedule("*/5 * * * *", async () => {
     const now = moment();
     const timeDifference = moment(event.start_at).diff(now, "minutes");
 
-    if (timeDifference <= 30) {
+    if (timeDifference <= 30 && singleEvent.state === "active") {
       // check if note with link exists (load all notes for event occurrence, )
       const existingNotesResult = await pike.get(
         `/event_occurrences/${event.id}/notes`
@@ -161,6 +161,8 @@ cron.schedule("*/5 * * * *", async () => {
       } else {
         console.log("----Notification already exists. Skipping.");
       }
+    } else if (timeDifference <= 30 && singleEvent.state === "canceled") {
+      console.log("----Event canceled. Skipping notification.");
     } else {
       console.log(
         `----Too early for notification (${timeDifference} minutes).`
