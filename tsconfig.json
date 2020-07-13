@@ -13,6 +13,7 @@
     "strictBindCallApply": true,
     "strictFunctionTypes": true,
     "moduleResolution": "node",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "rootDir": "src"
   }
 }
