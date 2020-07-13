@@ -19,20 +19,20 @@ const config = {
   pike: {
     accessToken: process.env.PIKE_ACCESS_TOKEN,
     baseUrl: process.env.PIKE_BASE_URL,
-    serviceIds: process.env.PIKE_SERVICE_IDS
+    serviceIds: process.env.PIKE_SERVICE_IDS,
   },
   zoom: {
     baseUrl: process.env.ZOOM_BASE_URL,
-    jwt: process.env.ZOOM_JWT
+    jwt: process.env.ZOOM_JWT,
   },
-  users: process.env.USER_IDS?.split(";").map(user => {
+  users: process.env.USER_IDS?.split(";").map((user) => {
     const details = user.split(",");
     return {
       name: details[0],
       pike: parseInt(details[1], 10),
-      zoom: details[2]
+      zoom: details[2],
     };
-  })
+  }),
 };
 
 const randomIntFromInterval = (min: number, max: number) => {
@@ -44,13 +44,13 @@ const pike = axios.create({
   baseURL: config.pike.baseUrl,
   headers: {
     Authorization: `Bearer ${config.pike.accessToken}`,
-    "Content-Type": "application/json"
-  }
+    "Content-Type": "application/json",
+  },
 });
 
 const zoom = axios.create({
   baseURL: config.zoom.baseUrl,
-  headers: { Authorization: `Bearer ${config.zoom.jwt}` }
+  headers: { Authorization: `Bearer ${config.zoom.jwt}` },
 });
 
 // main
@@ -62,18 +62,16 @@ cron.schedule("*/5 * * * *", async () => {
   const eventsResponse = await pike.get("/event_occurrences", {
     params: {
       from: moment().format(),
-      to: moment()
-        .add(24, "hours")
-        .format(),
-      service_ids: config.pike.serviceIds
-    }
+      to: moment().add(24, "hours").format(),
+      service_ids: config.pike.serviceIds,
+    },
   });
   const events = eventsResponse.data.event_occurrences;
   console.log(`--Found ${events.length} events within the next 24 hours`);
 
   // get zoom meetings
   const meetingsResponse = await zoom.get("/users/me/meetings", {
-    params: { type: "upcoming" }
+    params: { type: "upcoming" },
   });
   const meetings = meetingsResponse.data.meetings as ZoomMeeting[];
 
@@ -83,12 +81,12 @@ cron.schedule("*/5 * * * *", async () => {
     const singleEvent = singleEventResult.data.event_occurrences[0];
 
     const staff = config.users?.find(
-      user => user.pike === singleEvent.staff_members[0].id
+      (user) => user.pike === singleEvent.staff_members[0].id
     );
 
     // check if zoom meeting already exists
     const singleZoomMeeting = meetings.find(
-      meeting =>
+      (meeting) =>
         meeting.start_time === event.start_at && meeting.topic === event.name
     );
 
@@ -106,8 +104,8 @@ cron.schedule("*/5 * * * *", async () => {
         agenda: `pike13Id:${event.id}`,
         tracking_fields: [{ field: "pike13Id", value: event.id }],
         settings: {
-          alternative_hosts: staff?.zoom
-        }
+          alternative_hosts: staff?.zoom,
+        },
       };
 
       const createMeeting = await zoom.post(
@@ -153,9 +151,9 @@ cron.schedule("*/5 * * * *", async () => {
           note: {
             note,
             public: true,
-            send_notifications: true
+            send_notifications: true,
           },
-          send_notifications: true
+          send_notifications: true,
         });
         console.log(`----Created notification with meeting URL ${url}.`);
       } else {
