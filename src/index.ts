@@ -29,7 +29,7 @@ const pike = axios.create({
 });
 
 // main
-cron.schedule("* * * * *", async () => {
+cron.schedule("*/5 * * * *", async () => {
   // (async () => {
   console.log("\nStarting cron job...");
 
