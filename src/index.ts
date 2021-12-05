@@ -1,6 +1,6 @@
-import * as cron from "node-cron";
 import axios from "axios";
 import moment from "moment-timezone";
+import * as cron from "node-cron";
 
 interface ZoomMeeting {
   uuid: string;
