@@ -62,8 +62,8 @@ cron.schedule("*/10 * * * *", async () => {
   // get pike13 events
   const eventsResponse = await pike.get("/event_occurrences", {
     params: {
-      from: moment().format(),
-      to: moment().add(24, "hours").format(),
+      from: moment().tz("Europe/Zurich").format(),
+      to: moment().tz("Europe/Zurich").add(24, "hours").format(),
       service_ids: config.pike.serviceIds,
     },
   });
@@ -101,7 +101,7 @@ cron.schedule("*/10 * * * *", async () => {
         type: 2,
         start_time: event.start_at,
         timezone: event.timezone,
-        duration: 90,
+        duration: 75,
         agenda: `pike13Id:${event.id}`,
         tracking_fields: [{ field: "pike13Id", value: event.id }],
         // settings: {
@@ -129,8 +129,13 @@ cron.schedule("*/10 * * * *", async () => {
     }
 
     // check if notice needs to be sent out
-    const now = moment();
-    const timeDifference = moment(event.start_at).diff(now, "minutes");
+    const now = moment().tz(event.timezone);
+    const timeDifference = moment(event.start_at)
+      .tz(event.timezone)
+      .diff(now, "minutes");
+
+    console.log(now.format());
+    console.log(moment(event.start_at).tz(event.timezone).format());
 
     if (timeDifference <= 30 && singleEvent.state === "active") {
       // check if note with link exists (load all notes for event occurrence, )
