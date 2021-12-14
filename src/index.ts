@@ -134,8 +134,8 @@ cron.schedule("*/10 * * * *", async () => {
       .tz(event.timezone)
       .diff(now, "minutes");
 
-    console.log(now.format());
-    console.log(moment(event.start_at).tz(event.timezone).format());
+    // console.log(now.format());
+    // console.log(moment(event.start_at).tz(event.timezone).format());
 
     if (timeDifference <= 30 && singleEvent.state === "active") {
       // check if note with link exists (load all notes for event occurrence, )
